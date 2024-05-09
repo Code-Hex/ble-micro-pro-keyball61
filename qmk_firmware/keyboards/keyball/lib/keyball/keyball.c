@@ -23,7 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keyball.h"
 #include "drivers/pmw3360/pmw3360.h"
 #include "lib/bmp/keyboard.h"
+#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #include "lib/quantum/pointing_device/pointing_device_auto_mouse.h"
+#endif
 
 /*
  * see: https://github.com/qmk/qmk_firmware/blob/16557f9975abf693675e2cc246f3d1b1f73faf96/quantum/util.h#L13-L19

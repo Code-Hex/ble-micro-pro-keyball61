@@ -19,7 +19,9 @@
 #include "pointing_device.h"
 #include "keycode_str_converter.h"
 #include "lib/keyball/keyball.h"
+#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #include "lib/quantum/pointing_device/pointing_device_auto_mouse.h"
+#endif
 
 report_mouse_t local_mouse_report = {};
 
