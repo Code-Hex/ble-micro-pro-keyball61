@@ -19,6 +19,7 @@
 #include "pointing_device.h"
 #include "keycode_str_converter.h"
 #include "lib/keyball/keyball.h"
+#include "lib/quantum/pointing_device/pointing_device_auto_mouse.h"
 
 report_mouse_t local_mouse_report = {};
 
@@ -35,6 +36,7 @@ const key_string_map_t custom_keys_user = {
     "KBC_RST\0KBC_SAVE\0"
     "CPI_I100\0CPI_D100\0CPI_I1K\0CPI_D1K\0"
     "SCRL_TO\0SCRL_MO\0SCRL_DVI\0SCRL_DVD\0"
+    "AML_TO\0AML_I50\0AML_D50\0"
     "LOWER\0RAISE\0"
 };
 
@@ -44,7 +46,7 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {{{KC_A, KC_B, KC_C, KC_D, 
 
 uint32_t keymaps_len() { return sizeof(keymaps) / sizeof(uint16_t); }
 
-bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+bool _process_record_user(uint16_t keycode, keyrecord_t* record) {
     bool continue_process = process_record_user_bmp(keycode, record);
     if (continue_process == false) {
         return false;
@@ -99,12 +101,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     return true;
 }
 
+bool process_record_user(uint16_t keycode, keyrecord_t* record) {
+    return _process_record_user(keycode, record) &&
+#if defined(POINTING_DEVICE_ENABLE) && defined(POINTING_DEVICE_AUTO_MOUSE_ENABLE)
+    process_auto_mouse(keycode, record);
+#else
+    true;
+#endif
+}
+
 void pointing_device_init(void) {
     pointing_device_driver_init();
 }
 
 void pointing_device_task() {
     local_mouse_report = pointing_device_driver_get_report(local_mouse_report);
+    // automatic mouse layer function
+#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
+    pointing_device_task_auto_mouse(local_mouse_report);
+#endif
     pointing_device_set_report(local_mouse_report);
     pointing_device_send();
 }
@@ -116,6 +131,7 @@ void pointing_device_task() {
 void oledkit_render_info_user(void) {
     keyball_oled_render_keyinfo();
     keyball_oled_render_ballinfo();
+    keyball_oled_render_layerinfo();
 }
 #endif
 

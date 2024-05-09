@@ -75,6 +75,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define KEYBALL_MODEL 44
 #endif
 
+#define KEYBALL_OLED_MAX_PRESSING_KEYCODES 6
+
 //////////////////////////////////////////////////////////////////////////////
 // Types
 
@@ -94,6 +96,12 @@ enum keyball_keycodes {
     SCRL_DVI, // Increment scroll divider
     SCRL_DVD, // Decrement scroll divider
 
+    // Auto mouse layer control keycodes.
+    // Only works when POINTING_DEVICE_AUTO_MOUSE_ENABLE is defined.
+    AML_TO, // Toggle automatic mouse layer
+    AML_I50, // Increment automatic mouse layer timeout
+    AML_D50, // Decrement automatic mouse layer timeout
+
     KEYBALL_SAFE_RANGE,
 };
 
@@ -102,6 +110,10 @@ typedef union {
     struct {
         uint16_t cpi : 7;
         uint8_t sdiv : 3; // scroll divider
+#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
+        uint8_t amle : 1;  // automatic mouse layer enabled
+        uint16_t amlto : 5; // automatic mouse layer timeout
+#endif
     };
 } keyball_config_t;
 
@@ -137,6 +149,9 @@ typedef struct {
     uint16_t       last_kc;
     keypos_t       last_pos;
     report_mouse_t last_mouse;
+
+    // Buffer to indicate pressing keys.
+    char pressing_keys[KEYBALL_OLED_MAX_PRESSING_KEYCODES + 1];
 } keyball_t;
 
 typedef enum {
@@ -160,6 +175,11 @@ void keyball_oled_render_ballinfo(void);
 /// keyball_oled_render_keyinfo renders last processed key information to OLED.
 /// It shows column, row, key code, and key name (if available).
 void keyball_oled_render_keyinfo(void);
+
+/// keyball_oled_render_layerinfo renders current layer status information to
+/// OLED.  It shows layer mask with number (1~f) for active layers and '_' for
+/// inactive layers.
+void keyball_oled_render_layerinfo(void);
 
 /// keyball_get_scroll_mode gets current scroll mode.
 bool keyball_get_scroll_mode(void);
