@@ -113,9 +113,6 @@ typedef enum {
     pmw3360_LiftCutoff_Tune2           = 0x65,
 } pmw3360_reg_t;
 
-#define CPI_STEP 100
-#define PMW3360_CPI 500U
-
 enum {
     pmw3360_MAXCPI = 0x77, // = 119: 12000 CPI
 };
