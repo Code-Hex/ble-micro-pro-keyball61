@@ -27,8 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PMW3360_SPI_MODE 3
 #define PMW3360_CLOCKS 2000000
 
-#define constrain(amt, low, high) ((amt) < (low) ? (low) : ((amt) > (high) ? (high) : (amt)))
-
 static bool motion_bursting = false;
 
 void spi_start() {
@@ -91,13 +89,14 @@ void pmw3360_reg_write(uint8_t addr, uint8_t data) {
 }
 
 uint16_t pmw3360_cpi_get(void) {
-    uint8_t cpival = pmw3360_reg_read(pmw3360_Config1);
-    return (uint16_t)((cpival + 1) & 0xFF) * CPI_STEP;
+    return pmw3360_reg_read(pmw3360_Config1);
 }
 
 void pmw3360_cpi_set(uint16_t cpi) {
-    uint8_t cpival = constrain((cpi / CPI_STEP) - 1, 0, pmw3360_MAXCPI);
-    pmw3360_reg_write(pmw3360_Config1, cpival);
+    if (cpi > pmw3360_MAXCPI) {
+        cpi = pmw3360_MAXCPI;
+    }
+    pmw3360_reg_write(pmw3360_Config1, cpi);
 }
 
 static uint32_t pmw3360_timer      = 0;
@@ -198,11 +197,11 @@ bool pmw3360_init(void) {
     pmw3360_reg_read(pmw3360_Delta_Y_L);
     pmw3360_reg_read(pmw3360_Delta_Y_H);
 
+    // configuration
     pmw3360_reg_write(pmw3360_Config2, 0x00);
 
-    // pmw3360_reg_write(pmw3360_Angle_Tune, constrain(ROTATIONAL_TRANSFORM_ANGLE, -127, 127));
 
-    // pmw3360_reg_write(pmw3360_Lift_Config, PMW3360_LIFTOFF_DISTANCE);
+    // check product ID and revision ID
     uint8_t pid   = pmw3360_reg_read(pmw3360_Product_ID);
     uint8_t rev   = pmw3360_reg_read(pmw3360_Revision_ID);
     spi_stop();
