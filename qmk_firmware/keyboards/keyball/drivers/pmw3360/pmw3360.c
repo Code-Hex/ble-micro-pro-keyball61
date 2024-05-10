@@ -20,10 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "quantum.h"
 #include "pmw3360.h"
 
+// Include SROM definitions.
+#include "srom_0x04.c"
+#include "srom_0x81.c"
+
 #define PMW3360_SPI_MODE 3
 #define PMW3360_CLOCKS 2000000
 
 #define constrain(amt, low, high) ((amt) < (low) ? (low) : ((amt) > (high) ? (high) : (amt)))
+
+static bool motion_bursting = false;
 
 void spi_start() {
     setPinOutput(PMW3360_NCS_PIN);
@@ -63,6 +69,11 @@ uint8_t pmw3360_reg_read(uint8_t addr) {
     
     // tSRW/tSRR (=20us) minus tSCLK-NCS
     wait_us(19);
+    // Reset motion_bursting mode if read from a register other than motion
+    // burst register.
+    if (addr != pmw3360_Motion_Burst) {
+        motion_bursting = false;
+    }
     return data;
 }
 
@@ -129,6 +140,12 @@ bool pmw3360_motion_burst(pmw3360_motion_t *d) {
 #ifdef DEBUG_PMW3360_SCAN_RATE
     pmw3360_scan_perf_task();
 #endif
+    // Start motion burst if motion burst mode is not started.
+    if (!motion_bursting) {
+        pmw3360_reg_write(pmw3360_Motion_Burst, 0);
+        motion_bursting = true;
+    }
+
     spi_start();
     uint8_t snd = pmw3360_Motion_Burst;
     BMPAPI->spim.start(&snd, 1, NULL, 0, 0xFF);
@@ -136,10 +153,8 @@ bool pmw3360_motion_burst(pmw3360_motion_t *d) {
 
     uint8_t data[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
     BMPAPI->spim.start(NULL, 0, data, sizeof(data), 0xFF);
-    if ((data[0] & 0x88) != 0x80) {
-        spi_stop();
-        return false;
-    }
+
+    // skip to check MOT (data[0]) and Observation (data[1])
 
     d->x = data[2];
     d->x |= data[3] << 8;
@@ -147,6 +162,8 @@ bool pmw3360_motion_burst(pmw3360_motion_t *d) {
     d->y |= data[5] << 8;
 
     spi_stop();
+     // Required NCS in 500ns after motion burst.
+    wait_us(1);
     return true;
 }
 
@@ -190,4 +207,32 @@ bool pmw3360_init(void) {
     uint8_t rev   = pmw3360_reg_read(pmw3360_Revision_ID);
     spi_stop();
     return pid == 0x42 && rev == 0x01;
+}
+
+uint8_t pmw3360_srom_id = 0;
+
+void pmw3360_srom_upload(pmw3360_srom_t srom) {
+    pmw3360_reg_write(pmw3360_Config2, 0x00);
+    pmw3360_reg_write(pmw3360_SROM_Enable, 0x1d);
+    wait_ms(10);
+    pmw3360_reg_write(pmw3360_SROM_Enable, 0x18);
+
+    // SROM upload (download for PMW3360) with burst mode
+    spi_start();
+    // spi_write(pmw3360_SROM_Load_Burst | 0x80);
+    uint8_t ld_burst = pmw3360_SROM_Load_Burst | 0x80;
+    BMPAPI->spim.start(&ld_burst, 1, NULL, 0, 0xFF);
+
+    wait_us(15);
+    for (size_t i = 0; i < srom.len; i++) {
+        uint8_t c = pgm_read_byte(srom.data + i);
+        BMPAPI->spim.start(&c, 1, NULL, 0, 0xFF);
+        wait_us(15);
+    }
+    spi_stop();
+    wait_us(200);
+
+    pmw3360_srom_id = pmw3360_reg_read(pmw3360_SROM_ID);
+    pmw3360_reg_write(pmw3360_Config2, 0x00);
+    wait_ms(10);
 }

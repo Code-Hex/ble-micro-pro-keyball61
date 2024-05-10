@@ -23,10 +23,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keyball.h"
 #include "drivers/pmw3360/pmw3360.h"
 #include "lib/bmp/keyboard.h"
+#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
+#include "lib/quantum/pointing_device/pointing_device_auto_mouse.h"
+#endif
+
+/*
+ * see: https://github.com/qmk/qmk_firmware/blob/16557f9975abf693675e2cc246f3d1b1f73faf96/quantum/util.h#L13-L19
+ */
+#if !defined(MIN)
+#    define MIN(x, y) (((x) < (y)) ? (x) : (y))
+#endif
+
+#if !defined(MAX)
+#    define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#endif
+
 
 const uint8_t CPI_DEFAULT    = KEYBALL_CPI_DEFAULT / 100;
 const uint8_t CPI_MAX        = pmw3360_MAXCPI + 1;
 const uint8_t SCROLL_DIV_MAX = 7;
+
+const uint16_t AML_TIMEOUT_MIN = 100;
+const uint16_t AML_TIMEOUT_MAX = 1000;
+const uint16_t AML_TIMEOUT_QU  = 50;   // Quantization Unit
+
+static const char BL = '\xB0'; // Blank indicator character
+static const char LFSTR_ON[] PROGMEM = "\xB2\xB3";
+static const char LFSTR_OFF[] PROGMEM = "\xB4\xB5";
 
 keyball_t keyball = {
     .this_have_ball = false,
@@ -41,6 +64,8 @@ keyball_t keyball = {
 
     .scroll_mode = false,
     .scroll_div  = 0,
+
+    .pressing_keys = { BL, BL, BL, BL, BL, BL, 0 },
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -92,8 +117,16 @@ void pointing_device_driver_init(void) {
     keyball.this_have_ball = pmw3360_init();
 #endif
     if (keyball.this_have_ball) {
+#if defined(KEYBALL_PMW3360_UPLOAD_SROM_ID)
+#    if KEYBALL_PMW3360_UPLOAD_SROM_ID == 0x04
+        pmw3360_srom_upload(pmw3360_srom_0x04);
+#    elif KEYBALL_PMW3360_UPLOAD_SROM_ID == 0x81
+        pmw3360_srom_upload(pmw3360_srom_0x81);
+#    else
+#        error Invalid value for KEYBALL_PMW3360_UPLOAD_SROM_ID. Please choose 0x04 or 0x81 or disable it.
+#    endif
+#endif
         pmw3360_cpi_set(CPI_DEFAULT - 1);
-        pmw3360_reg_write(pmw3360_Motion_Burst, 0);
     }
 }
 
@@ -359,17 +392,29 @@ void keyball_oled_render_ballinfo(void) {
     //
     //     Ball: -12  34   0   0
     //
-    oled_write_P(PSTR("Ball:"), false);
+
+    // 1st line, "Ball" label, mouse x, y, h, and v.
+    oled_write_P(PSTR("Ball\xB1"), false);
     oled_write(format_4d(keyball.last_mouse.x), false);
     oled_write(format_4d(keyball.last_mouse.y), false);
     oled_write(format_4d(keyball.last_mouse.h), false);
     oled_write(format_4d(keyball.last_mouse.v), false);
-    // CPI
-    oled_write_P(PSTR("     CPI"), false);
+
+    // 2nd line, empty label and CPI
+    oled_write_P(PSTR("    \xB1\xBC\xBD"), false);
     oled_write(format_4d(keyball_get_cpi()) + 1, false);
-    oled_write_P(PSTR("00  S"), false);
-    oled_write_char(keyball.scroll_mode ? '1' : '0', false);
-    oled_write_P(PSTR("  D"), false);
+    oled_write_P(PSTR("00 "), false);
+
+    // indicate scroll mode: on/off
+    oled_write_P(PSTR("\xBE\xBF"), false);
+    if (keyball.scroll_mode) {
+        oled_write_P(LFSTR_ON, false);
+    } else {
+        oled_write_P(LFSTR_OFF, false);
+    }
+
+    // indicate scroll divider:
+    oled_write_P(PSTR(" \xC0\xC1"), false);
     oled_write_char('0' + keyball_get_scroll_div(), false);
 #endif
 }
@@ -386,25 +431,54 @@ void keyball_oled_render_keyinfo(void) {
     //
     //     Key :  R2  C3 K06  'c
     //     Ball:   0   0   0   0
-    //
-    uint8_t keycode = keyball.last_kc;
 
-    oled_write_P(PSTR("Key :  R"), false);
+    // "Key" Label
+    oled_write_P(PSTR("Key \xB1"), false);
+
+    // Row and column
+    oled_write_char('\xB8', false);
     oled_write_char(to_1x(keyball.last_pos.row), false);
-    oled_write_P(PSTR("  C"), false);
+    oled_write_char('\xB9', false);
     oled_write_char(to_1x(keyball.last_pos.col), false);
-    if (keycode) {
-        oled_write_P(PSTR(" K"), false);
-        oled_write_char(to_1x(keycode >> 4), false);
-        oled_write_char(to_1x(keycode), false);
+
+    // Keycode
+    oled_write_P(PSTR("\xBA\xBB"), false);
+    oled_write_char(to_1x(keyball.last_kc >> 4), false);
+    oled_write_char(to_1x(keyball.last_kc), false);
+
+    // Pressing keys
+    oled_write_P(PSTR("  "), false);
+    oled_write(keyball.pressing_keys, false);
+#endif
+}
+
+void keyball_oled_render_layerinfo(void) {
+#ifdef OLED_ENABLE
+    // Format: `Layer:{layer state}`
+    //
+    // Output example:
+    //
+    //     Layer:-23------------
+    //
+    oled_write_P(PSTR("L\xB6\xB7r\xB1"), false);
+    for (uint8_t i = 1; i < 8; i++) {
+        oled_write_char((layer_state_is(i) ? to_1x(i) : BL), false);
     }
-    if (keycode >= 4 && keycode < 57) {
-        oled_write_P(PSTR("  '"), false);
-        char name = pgm_read_byte(code_to_name + keycode - 4);
-        oled_write_char(name, false);
+    oled_write_char(' ', false);
+
+#    ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
+    oled_write_P(PSTR("\xC2\xC3"), false);
+    if (get_auto_mouse_enable()) {
+        oled_write_P(LFSTR_ON, false);
     } else {
-        oled_advance_page(true);
+        oled_write_P(LFSTR_OFF, false);
     }
+
+    oled_write(format_4d(get_auto_mouse_timeout() / 10) + 1, false);
+    oled_write_char('0', false);
+#    else
+    oled_write_P(PSTR("\xC2\xC3\xB4\xB5 ---"), false);
+#    endif
 #endif
 }
 
@@ -442,7 +516,6 @@ void keyball_set_cpi(uint16_t cpi) {
     keyball.cpi_changed = true;
     if (keyball.this_have_ball) {
         pmw3360_cpi_set(cpi == 0 ? CPI_DEFAULT - 1 : cpi - 1);
-        pmw3360_reg_write(pmw3360_Motion_Burst, 0);
     }
 }
 
@@ -464,6 +537,10 @@ void keyboard_post_init_kb(void) {
         keyball_config_t c = {.raw = eeconfig_read_kb()};
         keyball_set_cpi(c.cpi);
         keyball_set_scroll_div(c.sdiv);
+#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
+        set_auto_mouse_enable(c.amle);
+        set_auto_mouse_timeout(c.amlto == 0 ? AUTO_MOUSE_TIME : (c.amlto + 1) * AML_TIMEOUT_QU);
+#endif
     }
 
     keyball_on_adjust_layout(KEYBALL_ADJUST_PENDING);
@@ -482,10 +559,32 @@ void housekeeping_task_kb(void) {
 }
 #endif
 
+static void pressing_keys_update(uint16_t keycode, keyrecord_t *record) {
+    // Process only valid keycodes.
+    if (keycode >= 4 && keycode < 57) {
+        char value = pgm_read_byte(code_to_name + keycode - 4);
+        char where = BL;
+        if (!record->event.pressed) {
+            // Swap `value` and `where` when releasing.
+            where = value;
+            value = BL;
+        }
+        // Rewrite the last `where` of pressing_keys to `value` .
+        for (int i = 0; i < KEYBALL_OLED_MAX_PRESSING_KEYCODES; i++) {
+            if (keyball.pressing_keys[i] == where) {
+                keyball.pressing_keys[i] = value;
+                break;
+            }
+        }
+    }
+}
+
 bool process_record_kb_bmp(uint16_t keycode, keyrecord_t *record) {
     // store last keycode, row, and col for OLED
     keyball.last_kc  = keycode;
     keyball.last_pos = record->event.key;
+
+    pressing_keys_update(keycode, record);
 
     if (!process_record_user(keycode, record)) {
         return false;
@@ -550,6 +649,24 @@ bool process_record_kb_bmp(uint16_t keycode, keyrecord_t *record) {
             case SCRL_DVD:
                 add_scroll_div(-1);
                 break;
+
+#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
+            case AML_TO:
+                set_auto_mouse_enable(!get_auto_mouse_enable());
+                break;
+            case AML_I50:
+                {
+                    uint16_t v = get_auto_mouse_timeout() + 50;
+                    set_auto_mouse_timeout(MIN(v, AML_TIMEOUT_MAX));
+                }
+                break;
+            case AML_D50:
+                {
+                    uint16_t v = get_auto_mouse_timeout() - 50;
+                    set_auto_mouse_timeout(MAX(v, AML_TIMEOUT_MIN));
+                }
+                break;
+#endif
 
             default:
                 return true;

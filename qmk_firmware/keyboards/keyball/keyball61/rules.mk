@@ -53,6 +53,9 @@ SRC += lib/oledkit/oledkit.c    # OLED utility for Keyball series.
 # Include common library
 SRC += lib/keyball/keyball.c
 
+# Include for auto mouse layer
+SRC += lib/quantum/pointing_device/pointing_device_auto_mouse.c
+
 # Disable other features to squeeze firmware size
 SPACE_CADET_ENABLE = no
 MAGIC_ENABLE = no

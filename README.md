@@ -73,5 +73,8 @@ Value    | Keycode    |Description
 `0x5D69` | `SCRL_MO`  |Enable scroll mode when pressing
 `0x5D6A` | `SCRL_DVI` |Increase scroll divider (max 7 = 1/128)
 `0x5D6B` | `SCRL_DVD` |Decrease scroll divider (min 0 = 1/1)
+`0x5D6C` | `AML_TO`   | Toggle automatic mouse layer
+`0x5D6D` | `AML_I50`  | Increase 50ms automatic mouse layer timeout(max 15=950ms)
+`0x5D6E` | `AML_D50`  | Decrease 50ms automatic mouse layer timeout(min 1=250ms)
 
 *NOTE*: The values are for Remap
