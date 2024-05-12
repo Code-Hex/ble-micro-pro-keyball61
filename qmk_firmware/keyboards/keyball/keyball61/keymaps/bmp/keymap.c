@@ -34,6 +34,7 @@ const key_string_map_t custom_keys_user = {
     "CPI_I100\0CPI_D100\0CPI_I1K\0CPI_D1K\0"
     "SCRL_TO\0SCRL_MO\0SCRL_DVI\0SCRL_DVD\0"
     "AML_TO\0AML_I50\0AML_D50\0"
+    "SSNP_VRT\0SSNP_HOR\0SSNP_FRE\0"
     "LOWER\0RAISE\0"
 };
 

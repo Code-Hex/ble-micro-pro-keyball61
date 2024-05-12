@@ -67,12 +67,18 @@ You should make keymap on https://sekigon-gonnoc.github.io/qmk_configurator
 
 Using `./layouts/KEYMAP.JSN` file as a base will likely make configuration easier.
 
+It is recommended to use tools like [jq](https://jqlang.github.io/jq/) to compact `KEYMAP.JSN`. This is a tip for saving Flash memory capacity on the BLE Micro Pro. For example, if you want to compact JSON edited based on `layouts/KEYMAP.JSN.base`, execute the following command:
+
+```console
+$ cat layouts/KEYMAP.JSN.base | jq . -c > layouts/KEYMAP.JSN
+```
+
 ## Special keycodes
 
 Value    | Keycode    |Description
 ---------|------------|------------------------------------------------------------------
-`0x5D62` | `KBC_RST`  | Reset Keyball configuration
-`0x5D63` | `KBC_SAVE` | Persist Keyball configuration to EEPROM
+`0x5D62` | `KBC_RST`  | Reset Keyball configuration[^1]
+`0x5D63` | `KBC_SAVE` | Persist Keyball configuration[^1] to EEPROM
 `0x5D64` | `CPI_I100` | Increase 100 CPI (max 12000)
 `0x5D65` | `CPI_D100` | Decrease 100 CPI (min 100)
 `0x5D66` | `CPI_I1K`  | Increase 1000 CPI (max 12000)
@@ -82,7 +88,10 @@ Value    | Keycode    |Description
 `0x5D6A` | `SCRL_DVI` | Increase scroll divider (max 7 = 1/128)
 `0x5D6B` | `SCRL_DVD` | Decrease scroll divider (min 0 = 1/1)
 `0x5D6C` | `AML_TO`   | Toggle automatic mouse layer
-`0x5D6D` | `AML_I50`  | Increase 50ms automatic mouse layer timeout(max 15=950ms)
-`0x5D6E` | `AML_D50`  | Decrease 50ms automatic mouse layer timeout(min 1=250ms)
+`0x5D6D` | `AML_I50`  | Increase 50ms automatic mouse layer timeout(max 1000ms)
+`0x5D6E` | `AML_D50`  | Decrease 50ms automatic mouse layer timeout(min 100ms)
+`0x5D6F` | `SSNP_VRT` | Set scroll snap mode as vertical
+`0x5d70` | `SSNP_HOR` | Set scroll snap mode as horizontal
+`0x5d71` | `SSNP_FRE` | Set scroll snap mode as disable (free scroll)
 
-*NOTE*: The values are for Remap
+[^1]: CPI, scroll divider, automatic mouse layer's enable/disable, and automatic mouse layer's timeout.
