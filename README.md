@@ -18,6 +18,10 @@ Keyball61 provides some keymaps as default:
 * `test` - Test for building/soldering Keyball61 (w/ right trackball)
 * `bmp` - Template for customized keymap (w/ right trackball and BLE Micro Pro custom keys)
 
+## Download firmware
+
+If you are not interested in extending the firmware and only want the built firmware file (`.uf2`), you can download it from [here](https://github.com/Code-Hex/ble-micro-pro-keyball61/releases).
+
 ## How to build firmware
 
 1. Check out this repository.
