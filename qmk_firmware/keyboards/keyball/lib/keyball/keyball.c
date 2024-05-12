@@ -85,6 +85,40 @@ static inline int8_t clip2int8(int16_t v) {
     return (v) < -127 ? -127 : (v) > 127 ? 127 : (int8_t)v;
 }
 
+#ifdef OLED_ENABLE
+static const char *format_4d(int8_t d) {
+    static char buf[5] = {0}; // max width (4) + NUL (1)
+    char        lead   = ' ';
+    if (d < 0) {
+        d    = -d;
+        lead = '-';
+    }
+    buf[3] = (d % 10) + '0';
+    d /= 10;
+    if (d == 0) {
+        buf[2] = lead;
+        lead   = ' ';
+    } else {
+        buf[2] = (d % 10) + '0';
+        d /= 10;
+    }
+    if (d == 0) {
+        buf[1] = lead;
+        lead   = ' ';
+    } else {
+        buf[1] = (d % 10) + '0';
+        d /= 10;
+    }
+    buf[0] = lead;
+    return buf;
+}
+
+static char to_1x(uint8_t x) {
+    x &= 0x0f;
+    return x < 10 ? x + '0' : x + 'a' - 10;
+}
+#endif
+
 static void add_cpi(int8_t delta) {
     int16_t v = keyball_get_cpi() + delta;
     keyball_set_cpi(v < 1 ? 1 : v);
@@ -131,7 +165,7 @@ void pointing_device_driver_set_cpi(uint16_t cpi) {
     keyball_set_cpi(cpi);
 }
 
-static void motion_to_mouse_move(keyball_motion_t *m, report_mouse_t *r, bool is_left) {
+__attribute__((weak)) void keyball_on_apply_motion_to_mouse_move(keyball_motion_t *m, report_mouse_t *r, bool is_left) {
 #if KEYBALL_MODEL == 61 || KEYBALL_MODEL == 39 || KEYBALL_MODEL == 147 || KEYBALL_MODEL == 44
     r->x = clip2int8(m->y);
     r->y = clip2int8(m->x);
@@ -150,7 +184,7 @@ static void motion_to_mouse_move(keyball_motion_t *m, report_mouse_t *r, bool is
     m->y = 0;
 }
 
-static void motion_to_mouse_scroll(keyball_motion_t *m, report_mouse_t *r, bool is_left) {
+__attribute__((weak)) void keyball_on_apply_motion_to_mouse_scroll(keyball_motion_t *m, report_mouse_t *r, bool is_left) {
     // consume motion of trackball.
     int16_t div = 1 << (keyball_get_scroll_div() - 1);
     int16_t x = divmod16(&m->x, div);
@@ -171,8 +205,9 @@ static void motion_to_mouse_scroll(keyball_motion_t *m, report_mouse_t *r, bool 
 #    error("unknown Keyball model")
 #endif
 
-#if KEYBALL_SCROLLSNAP_ENABLE
-    // scroll snap.
+    // Scroll snapping
+#if KEYBALL_SCROLLSNAP_ENABLE == 1
+    // Old behavior up to 1.3.2)
     uint32_t now = timer_read32();
     if (r->h != 0 || r->v != 0) {
         keyball.scroll_snap_last = now;
@@ -183,14 +218,27 @@ static void motion_to_mouse_scroll(keyball_motion_t *m, report_mouse_t *r, bool 
         keyball.scroll_snap_tension_h += y;
         r->h = 0;
     }
+#elif KEYBALL_SCROLLSNAP_ENABLE == 2
+    // New behavior
+    switch (keyball_get_scrollsnap_mode()) {
+        case KEYBALL_SCROLLSNAP_MODE_VERTICAL:
+            r->h = 0;
+            break;
+        case KEYBALL_SCROLLSNAP_MODE_HORIZONTAL:
+            r->v = 0;
+            break;
+        default:
+            // pass by without doing anything
+            break;
+    }
 #endif
 }
 
 static void motion_to_mouse(keyball_motion_t *m, report_mouse_t *r, bool is_left, bool as_scroll) {
     if (as_scroll) {
-        motion_to_mouse_scroll(m, r, is_left);
+        keyball_on_apply_motion_to_mouse_scroll(m, r, is_left);
     } else {
-        motion_to_mouse_move(m, r, is_left);
+        keyball_on_apply_motion_to_mouse_move(m, r, is_left);
     }
 }
 
@@ -339,50 +387,16 @@ const char PROGMEM code_to_name[] = {
     '_', '-', '=', '[', ']', '\\', '#', ';', '\'', '`',
     ',', '.', '/',
 };
-
-static char to_1x(uint8_t x) {
-    x &= 0x0f;
-    return x < 10 ? x + '0' : x + 'a' - 10;
-}
-
-static const char *format_4d(int8_t d) {
-    static char buf[5] = {0}; // max width (4) + NUL (1)
-    char        lead   = ' ';
-    if (d < 0) {
-        d    = -d;
-        lead = '-';
-    }
-    buf[3] = (d % 10) + '0';
-    d /= 10;
-    if (d == 0) {
-        buf[2] = lead;
-        lead   = ' ';
-    } else {
-        buf[2] = (d % 10) + '0';
-        d /= 10;
-    }
-    if (d == 0) {
-        buf[1] = lead;
-        lead   = ' ';
-    } else {
-        buf[1] = (d % 10) + '0';
-        d /= 10;
-    }
-    buf[0] = lead;
-    return buf;
-}
 // clang-format on
 #endif
 
 void keyball_oled_render_ballinfo(void) {
 #ifdef OLED_ENABLE
     // Format: `Ball:{mouse x}{mouse y}{mouse h}{mouse v}`
-    //         `    CPI{CPI} S{SCROLL_MODE} D{SCROLL_DIV}`
     //
     // Output example:
     //
     //     Ball: -12  34   0   0
-    //
 
     // 1st line, "Ball" label, mouse x, y, h, and v.
     oled_write_P(PSTR("Ball\xB1"), false);
@@ -396,8 +410,23 @@ void keyball_oled_render_ballinfo(void) {
     oled_write(format_4d(keyball_get_cpi()) + 1, false);
     oled_write_P(PSTR("00 "), false);
 
-    // indicate scroll mode: on/off
+    // indicate scroll snap mode: "VT" (vertical), "HN" (horiozntal), and "SCR" (free)
+#if 1 && KEYBALL_SCROLLSNAP_ENABLE == 2
+    switch (keyball_get_scrollsnap_mode()) {
+        case KEYBALL_SCROLLSNAP_MODE_VERTICAL:
+            oled_write_P(PSTR("VT"), false);
+            break;
+        case KEYBALL_SCROLLSNAP_MODE_HORIZONTAL:
+            oled_write_P(PSTR("HO"), false);
+            break;
+        default:
+            oled_write_P(PSTR("\xBE\xBF"), false);
+            break;
+    }
+#else
     oled_write_P(PSTR("\xBE\xBF"), false);
+#endif
+    // indicate scroll mode: on/off
     if (keyball.scroll_mode) {
         oled_write_P(LFSTR_ON, false);
     } else {
@@ -412,15 +441,18 @@ void keyball_oled_render_ballinfo(void) {
 
 void keyball_oled_render_keyinfo(void) {
 #ifdef OLED_ENABLE
-    // Format: `Key :  R{row}  C{col} K{kc}  '{name}`
+    // Format: `Key :  R{row}  C{col} K{kc} {name}{name}{name}`
     //
     // Where `kc` is lower 8 bit of keycode.
-    // Where `name` is readable label for `kc`, valid between 4 and 56.
+    // Where `name`s are readable labels for pressing keys, valid between 4 and 56.
+    //
+    // `row`, `col`, and `kc` indicates the last processed key,
+    // but `name`s indicate unreleased keys in best effort.
     //
     // It is aligned to fit with output of keyball_oled_render_ballinfo().
     // For example:
     //
-    //     Key :  R2  C3 K06  'c
+    //     Key :  R2  C3 K06 abc
     //     Ball:   0   0   0   0
 
     // "Key" Label
@@ -487,6 +519,20 @@ void keyball_set_scroll_mode(bool mode) {
     keyball.scroll_mode = mode;
 }
 
+keyball_scrollsnap_mode_t keyball_get_scrollsnap_mode(void) {
+#if KEYBALL_SCROLLSNAP_ENABLE == 2
+    return keyball.scrollsnap_mode;
+#else
+    return 0;
+#endif
+}
+
+void keyball_set_scrollsnap_mode(keyball_scrollsnap_mode_t mode) {
+#if KEYBALL_SCROLLSNAP_ENABLE == 2
+    keyball.scrollsnap_mode = mode;
+#endif
+}
+
 uint8_t keyball_get_scroll_div(void) {
     return keyball.scroll_div == 0 ? KEYBALL_SCROLL_DIV_DEFAULT : keyball.scroll_div;
 }
@@ -495,11 +541,11 @@ void keyball_set_scroll_div(uint8_t div) {
     keyball.scroll_div = div > SCROLL_DIV_MAX ? SCROLL_DIV_MAX : div;
 }
 
-uint16_t keyball_get_cpi(void) {
+uint8_t keyball_get_cpi(void) {
     return keyball.cpi_value == 0 ? CPI_DEFAULT : keyball.cpi_value;
 }
 
-void keyball_set_cpi(uint16_t cpi) {
+void keyball_set_cpi(uint8_t cpi) {
     if (cpi > CPI_MAX) {
         cpi = CPI_MAX;
     }
@@ -531,6 +577,9 @@ void keyboard_post_init_kb(void) {
 #ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
         set_auto_mouse_enable(c.amle);
         set_auto_mouse_timeout(c.amlto == 0 ? AUTO_MOUSE_TIME : (c.amlto + 1) * AML_TIMEOUT_QU);
+#endif
+#if KEYBALL_SCROLLSNAP_ENABLE == 2
+        keyball_set_scrollsnap_mode(c.ssnap);
 #endif
     }
 
@@ -626,11 +675,22 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
             case KBC_RST:
                 keyball_set_cpi(0);
                 keyball_set_scroll_div(0);
+#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
+                set_auto_mouse_enable(false);
+                set_auto_mouse_timeout(AUTO_MOUSE_TIME);
+#endif
                 break;
             case KBC_SAVE: {
                 keyball_config_t c = {
                     .cpi  = keyball.cpi_value,
                     .sdiv = keyball.scroll_div,
+#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
+                    .amle  = get_auto_mouse_enable(),
+                    .amlto = (get_auto_mouse_timeout() / AML_TIMEOUT_QU) - 1,
+#endif
+#if KEYBALL_SCROLLSNAP_ENABLE == 2
+                    .ssnap = keyball_get_scrollsnap_mode(),
+#endif
                 };
                 eeconfig_update_kb(c.raw);
             } break;
@@ -657,6 +717,18 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
             case SCRL_DVD:
                 add_scroll_div(-1);
                 break;
+
+#if KEYBALL_SCROLLSNAP_ENABLE == 2
+            case SSNP_HOR:
+                keyball_set_scrollsnap_mode(KEYBALL_SCROLLSNAP_MODE_HORIZONTAL);
+                break;
+            case SSNP_VRT:
+                keyball_set_scrollsnap_mode(KEYBALL_SCROLLSNAP_MODE_VERTICAL);
+                break;
+            case SSNP_FRE:
+                keyball_set_scrollsnap_mode(KEYBALL_SCROLLSNAP_MODE_FREE);
+                break;
+#endif
 
 #ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
             case AML_TO:
