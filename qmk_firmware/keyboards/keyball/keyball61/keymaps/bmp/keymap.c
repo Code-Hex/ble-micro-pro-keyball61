@@ -19,11 +19,6 @@
 #include "pointing_device.h"
 #include "keycode_str_converter.h"
 #include "lib/keyball/keyball.h"
-#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
-#include "lib/quantum/pointing_device/pointing_device_auto_mouse.h"
-#endif
-
-report_mouse_t local_mouse_report = {};
 
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
@@ -55,26 +50,6 @@ bool _process_record_user(uint16_t keycode, keyrecord_t* record) {
     }
 
     switch (keycode) {
-#ifndef MOUSEKEY_ENABLE
-        case KC_BTN1:
-            local_mouse_report.buttons = MOUSE_BTN1;
-            if (!record->event.pressed) {
-                local_mouse_report.buttons = 0;
-            }
-            break;
-        case KC_BTN2:
-            local_mouse_report.buttons = MOUSE_BTN2;
-            if (!record->event.pressed) {
-                local_mouse_report.buttons = 0;
-            }
-            break;
-        case KC_BTN3:
-            local_mouse_report.buttons = MOUSE_BTN3;
-            if (!record->event.pressed) {
-                local_mouse_report.buttons = 0;
-            }
-            break;
-#endif
         case LOWER:
             if (record->event.pressed) {
                 layer_on(_LOWER);
@@ -103,12 +78,13 @@ bool _process_record_user(uint16_t keycode, keyrecord_t* record) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    return _process_record_user(keycode, record) &&
+    return
 #if defined(POINTING_DEVICE_ENABLE) && defined(POINTING_DEVICE_AUTO_MOUSE_ENABLE)
-    process_auto_mouse(keycode, record);
+    process_auto_mouse(keycode, record)
 #else
-    true;
+    true
 #endif
+    && _process_record_user(keycode, record);
 }
 
 void pointing_device_init(void) {
@@ -116,6 +92,7 @@ void pointing_device_init(void) {
 }
 
 void pointing_device_task() {
+    report_mouse_t local_mouse_report = pointing_device_get_report();
     local_mouse_report = pointing_device_driver_get_report(local_mouse_report);
     // automatic mouse layer function
 #ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
