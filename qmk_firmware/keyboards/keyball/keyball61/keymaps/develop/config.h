@@ -31,3 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #    define RGBLIGHT_EFFECT_ALTERNATING
 #    define RGBLIGHT_EFFECT_TWINKLE
 #endif
+
+/* This macro indices using https://github.com/sekigon-gonnoc/qmk_firmware */
+#define USE_BMP_V0_FIRMWARE

@@ -17,7 +17,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#ifdef USE_BMP_V0_FIRMWARE
 #include "bmp_custom_keycode.h"
+#  ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
+#  include "lib/quantum/pointing_device/pointing_device_auto_mouse.h"
+#  endif
+#endif
+
+/*
+ * see: https://github.com/qmk/qmk_firmware/blob/16557f9975abf693675e2cc246f3d1b1f73faf96/quantum/util.h#L13-L19
+ */
+#if !defined(MIN)
+#    define MIN(x, y) (((x) < (y)) ? (x) : (y))
+#endif
+
+#if !defined(MAX)
+#    define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#endif
+
 //////////////////////////////////////////////////////////////////////////////
 // Configurations
 

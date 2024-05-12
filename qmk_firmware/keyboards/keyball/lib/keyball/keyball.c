@@ -23,21 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keyball.h"
 #include "drivers/pmw3360/pmw3360.h"
 #include "lib/bmp/keyboard.h"
-#ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
-#include "lib/quantum/pointing_device/pointing_device_auto_mouse.h"
-#endif
-
-/*
- * see: https://github.com/qmk/qmk_firmware/blob/16557f9975abf693675e2cc246f3d1b1f73faf96/quantum/util.h#L13-L19
- */
-#if !defined(MIN)
-#    define MIN(x, y) (((x) < (y)) ? (x) : (y))
-#endif
-
-#if !defined(MAX)
-#    define MAX(x, y) (((x) > (y)) ? (x) : (y))
-#endif
-
 
 const uint8_t CPI_DEFAULT    = KEYBALL_CPI_DEFAULT / 100;
 const uint8_t CPI_MAX        = pmw3360_MAXCPI + 1;
@@ -595,7 +580,12 @@ bool is_mouse_record_kb(uint16_t keycode, keyrecord_t* record) {
 }
 #endif
 
-bool process_record_kb_bmp(uint16_t keycode, keyrecord_t *record) {
+#ifdef USE_BMP_V0_FIRMWARE
+bool process_record_kb_bmp(uint16_t keycode, keyrecord_t *record)
+#else
+bool process_record_kb(uint16_t keycode, keyrecord_t *record)
+#endif
+{
     // store last keycode, row, and col for OLED
     keyball.last_kc  = keycode;
     keyball.last_pos = record->event.key;
