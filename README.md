@@ -99,3 +99,7 @@ Value    | Keycode    |Description
 `0x5d71` | `SSNP_FRE` | Set scroll snap mode as disable (free scroll)
 
 [^1]: CPI, scroll divider, automatic mouse layer's enable/disable, and automatic mouse layer's timeout.
+
+## Remap
+
+If you want to use remap to customize keymap, you can use https://qmk018.remap-keys.app/ because [sekigon-gonnoc/qmk_firmware](https://github.com/sekigon-gonnoc/qmk_firmware) does not support the latest version of Remap available at https://remap-keys.app/
