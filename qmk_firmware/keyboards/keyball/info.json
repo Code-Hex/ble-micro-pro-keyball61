@@ -1,0 +1,84 @@
+{
+  "usb": {
+    "vid": "0x5957",
+    "pid": "0x0100"
+  },
+  "manufacturer": "codehex",
+  "keyboard_name": "BLE Micro Pro Keyball61",
+  "layouts": {
+    "LAYOUT_right_ball": {
+      "layout": [
+        { "label": "L00", "x": 0, "y": 0, "matrix": [0, 0] },
+        { "label": "L01", "x": 1, "y": 0, "matrix": [0, 1] },
+        { "label": "L02", "x": 2, "y": 0, "matrix": [0, 2] },
+        { "label": "L03", "x": 3, "y": 0, "matrix": [0, 4] },
+        { "label": "L04", "x": 4, "y": 0, "matrix": [0, 5] },
+        { "label": "L05", "x": 5, "y": 0, "matrix": [0, 6] },
+        { "label": "R05", "x": 8, "y": 0, "matrix": [5, 6] },
+        { "label": "R04", "x": 9, "y": 0, "matrix": [5, 5] },
+        { "label": "R03", "x":10, "y": 0, "matrix": [5, 4] },
+        { "label": "R02", "x":11, "y": 0, "matrix": [5, 2] },
+        { "label": "R01", "x":12, "y": 0, "matrix": [5, 1] },
+        { "label": "R00", "x":13, "y": 0, "matrix": [5, 0] },
+
+        { "label": "L10", "x": 0, "y": 1, "matrix": [1, 0] },
+        { "label": "L11", "x": 1, "y": 1, "matrix": [1, 1] },
+        { "label": "L12", "x": 2, "y": 1, "matrix": [1, 2] },
+        { "label": "L13", "x": 3, "y": 1, "matrix": [1, 4] },
+        { "label": "L14", "x": 4, "y": 1, "matrix": [1, 5] },
+        { "label": "L15", "x": 5, "y": 1, "matrix": [1, 6] },
+        { "label": "R15", "x": 8, "y": 1, "matrix": [6, 6] },
+        { "label": "R14", "x": 9, "y": 1, "matrix": [6, 5] },
+        { "label": "R13", "x":10, "y": 1, "matrix": [6, 4] },
+        { "label": "R12", "x":11, "y": 1, "matrix": [6, 2] },
+        { "label": "R11", "x":12, "y": 1, "matrix": [6, 1] },
+        { "label": "R10", "x":13, "y": 1, "matrix": [6, 0] },
+
+        { "label": "L20", "x": 0, "y": 2, "matrix": [2, 0] },
+        { "label": "L21", "x": 1, "y": 2, "matrix": [2, 1] },
+        { "label": "L22", "x": 2, "y": 2, "matrix": [2, 2] },
+        { "label": "L23", "x": 3, "y": 2, "matrix": [2, 4] },
+        { "label": "L24", "x": 4, "y": 2, "matrix": [2, 5] },
+        { "label": "L25", "x": 5, "y": 2, "matrix": [2, 6] },
+        { "label": "R25", "x": 8, "y": 2, "matrix": [7, 6] },
+        { "label": "R24", "x": 9, "y": 2, "matrix": [7, 5] },
+        { "label": "R23", "x":10, "y": 2, "matrix": [7, 4] },
+        { "label": "R22", "x":11, "y": 2, "matrix": [7, 2] },
+        { "label": "R21", "x":12, "y": 2, "matrix": [7, 1] },
+        { "label": "R20", "x":13, "y": 2, "matrix": [7, 0] },
+
+        { "label": "L30", "x": 0, "y": 3, "matrix": [3, 0] },
+        { "label": "L31", "x": 1, "y": 3, "matrix": [3, 1] },
+        { "label": "L32", "x": 2, "y": 3, "matrix": [3, 2] },
+        { "label": "L33", "x": 3, "y": 3, "matrix": [3, 4] },
+        { "label": "L34", "x": 4, "y": 3, "matrix": [3, 5] },
+        { "label": "L35", "x": 5, "y": 3, "matrix": [3, 6] },
+        { "label": "L36", "x": 6, "y": 3, "matrix": [3, 7] },
+        { "label": "R36", "x": 7, "y": 3, "matrix": [8, 7] },
+        { "label": "R35", "x": 8, "y": 3, "matrix": [8, 6] },
+        { "label": "R34", "x": 9, "y": 3, "matrix": [8, 5] },
+        { "label": "R33", "x":10, "y": 3, "matrix": [8, 4] },
+        { "label": "R32", "x":11, "y": 3, "matrix": [8, 2] },
+        { "label": "R31", "x":12, "y": 3, "matrix": [8, 1] },
+        { "label": "R30", "x":13, "y": 3, "matrix": [8, 0] },
+
+        { "label": "L40", "x": 0, "y": 4, "matrix": [4, 0] },
+        { "label": "L41", "x": 1, "y": 4, "matrix": [4, 1] },
+        { "label": "L42", "x": 2, "y": 4, "matrix": [4, 2] },
+        { "label": "L43", "x": 3, "y": 4, "matrix": [4, 4] },
+        { "label": "L44", "x": 4, "y": 4, "matrix": [4, 5] },
+        { "label": "L45", "x": 5, "y": 4, "matrix": [4, 6] },
+        { "label": "L46", "x": 6, "y": 4, "matrix": [4, 7] },
+        { "label": "R46", "x": 7, "y": 4, "matrix": [9, 7] },
+        { "label": "R45", "x": 8, "y": 4, "matrix": [9, 6] },
+        { "label": "R41", "x":12, "y": 4, "matrix": [9, 1] },
+        { "label": "R40", "x":13, "y": 4, "matrix": [9, 0] }
+      ]
+    }
+  },
+  "matrix_size":{"rows": 10, "cols": 8},
+  "matrix_pins": {
+    "rows": [7, 8, 9, 10, 11],
+    "cols": [20, 19, 18, 17]
+  }
+}
