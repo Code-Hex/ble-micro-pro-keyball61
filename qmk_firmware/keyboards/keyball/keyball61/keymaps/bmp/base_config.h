@@ -22,6 +22,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config_common.h"
 #include "apidef.h"
 
+// Align the BLE Micro Pro pin locations with the Pro Micro pin numbers.
+//
+// BLE Pro Micro: https://github.com/sekigon-gonnoc/BLE-Micro-Pro/blob/master/pin%20assign.jpg
+// Pro Micro ("P" prefix): https://camo.githubusercontent.com/6bc0edb851f17ee8c8b6dd9f2c86d93951c78f745f2e5be31f91e7824dd1e379/68747470733a2f2f692e696d6775722e636f6d2f51744c6a5830312e706e67
+#define D3 1
+#define D2 2
+#define D1 5
+#define D0 6
+#define D4 7
+#define C6 8
+#define D7 9
+#define E6 10
+#define B4 11
+#define B5 12
+#define F4 20
+#define F5 19
+#define F6 18
+#define F7 17
+#define B1 16
+#define B3 15
+#define B2 14
+#define B6 13
+
 // unimplemented
 #define waitInputPinDelay()
 
@@ -73,8 +96,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* COL2ROW, ROW2COL*/
 #define DIODE_DIRECTION COL2ROW
 
-#define G00 1 // Dummy for bin/qmk config generation
-#define RGB_DI_PIN          G00
+#define RGB_DI_PIN          D3
 #ifdef RGBLIGHT_ENABLE
 #  define RGBLED_NUM_DEFAULT 128
 #endif
