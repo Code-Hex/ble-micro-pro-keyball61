@@ -29,13 +29,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 static bool motion_bursting = false;
 
-void spi_start() {
+void spi_start(void) {
     setPinOutput(PMW3360_NCS_PIN);
     writePinLow(PMW3360_NCS_PIN);
     wait_us(1);
 }
 
-void spi_stop() {
+void spi_stop(void) {
     wait_us(1);
     setPinOutput(PMW3360_NCS_PIN);
     writePinHigh(PMW3360_NCS_PIN);
@@ -164,15 +164,6 @@ bool pmw3360_motion_burst(pmw3360_motion_t *d) {
      // Required NCS in 500ns after motion burst.
     wait_us(1);
     return true;
-}
-
-bool pmw3360_check_signature() {
-    uint8_t pid      = pmw3360_reg_read(pmw3360_Product_ID);
-    // uint8_t iv_pid   = pmw3360_reg_read(pmw3360_Revision_ID);
-    // return pid == 0x42 && iv_pid == 0x01;
-    uint8_t iv_pid   = pmw3360_reg_read(pmw3360_Inverse_Product_ID);
-    uint8_t SROM_ver = pmw3360_reg_read(pmw3360_SROM_ID);
-    return pid == 0x42 && iv_pid == 0xBD && SROM_ver == 0x04;
 }
 
 bool pmw3360_init(void) {

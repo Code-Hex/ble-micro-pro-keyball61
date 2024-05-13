@@ -164,3 +164,8 @@ uint8_t pmw3360_reg_read(uint8_t addr);
 
 report_mouse_t pointing_device_driver_get_report(report_mouse_t mouse_report);
 void pointing_device_driver_init(void);
+
+//////////////////////////////////////////////////////////////////////////////
+// SPI operations
+void spi_start(void);
+void spi_stop(void);
