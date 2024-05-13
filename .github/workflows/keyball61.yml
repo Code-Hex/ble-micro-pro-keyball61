@@ -29,9 +29,6 @@ jobs:
     - name: Install a link to own source
       run: ln -s $(pwd)/qmk_firmware/keyboards/keyball __qmk__/keyboards/keyball
 
-    - run: make -j4 SKIP_GIT=yes keyball/keyball61:test:uf2
-      working-directory: __qmk__
-
     - run: make -j4 SKIP_GIT=yes keyball/keyball61:bmp:uf2
       working-directory: __qmk__
 
