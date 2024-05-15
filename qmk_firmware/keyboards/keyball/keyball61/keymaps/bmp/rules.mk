@@ -13,9 +13,6 @@ OLED_ENABLE = yes
 # Keyball61 is split keyboard.
 SPLIT_KEYBOARD = yes
 
-# This is unnecessary for processing KC_MS_BTN* for keyball.
-MOUSEKEY_ENABLE = no
-
 # EXTRAKEY_ENABLE = yes       # Audio control and System control(+450)
 
 RGBLIGHT_DRIVER = WS2812
