@@ -21,7 +21,7 @@ CONSOLE_ENABLE = yes
 
 # Keyball61 is duplex matrix, uses custom matrix.
 CUSTOM_MATRIX = yes # for BLE Micro Pro
-SRC += matrix.c
+SRC += lib/matrix.c
 
 # Build Options
 #   change yes to no to disable
