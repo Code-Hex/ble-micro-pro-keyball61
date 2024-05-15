@@ -17,8 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "quantum.h"
-#include "lib/bmp/keyboard.h"
-#include "print.h"
 
 #if defined(OLED_ENABLE) && !defined(OLEDKIT_DISABLE)
 
@@ -38,12 +36,20 @@ __attribute__((weak)) void oledkit_render_info_user(void) {
     oled_write_P(logo, false);
 }
 
-__attribute__((weak)) void oled_task_user(void) {
+#ifdef USE_BMP_V0_FIRMWARE
+__attribute__((weak)) void oled_task_user(void)
+#else
+__attribute__((weak)) bool oled_task_user(void)
+#endif
+{
     if (is_keyboard_master()) {
         oledkit_render_info_user();
     } else {
         oledkit_render_logo_user();
     }
+#ifndef USE_BMP_V0_FIRMWARE
+    return true;
+#endif
 }
 
 __attribute__((weak)) oled_rotation_t oled_init_user(oled_rotation_t rotation) {

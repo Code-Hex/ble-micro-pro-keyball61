@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "keyball.h"
 #include "drivers/pmw3360/pmw3360.h"
-#include "lib/bmp/keyboard.h"
 
 const uint8_t CPI_DEFAULT    = KEYBALL_CPI_DEFAULT / 100;
 const uint8_t CPI_MAX        = pmw3360_MAXCPI + 1;
@@ -33,8 +32,10 @@ const uint16_t AML_TIMEOUT_MAX = 1000;
 const uint16_t AML_TIMEOUT_QU  = 50;   // Quantization Unit
 
 static const char BL = '\xB0'; // Blank indicator character
+#ifdef OLED_ENABLE
 static const char LFSTR_ON[] PROGMEM = "\xB2\xB3";
 static const char LFSTR_OFF[] PROGMEM = "\xB4\xB5";
+#endif
 
 keyball_t keyball = {
     .this_have_ball = false,
@@ -600,6 +601,7 @@ void housekeeping_task_kb(void) {
 #endif
 
 static void pressing_keys_update(uint16_t keycode, keyrecord_t *record) {
+#ifdef OLED_ENABLE
     // Process only valid keycodes.
     if (keycode >= 4 && keycode < 57) {
         char value = pgm_read_byte(code_to_name + keycode - 4);
@@ -617,6 +619,7 @@ static void pressing_keys_update(uint16_t keycode, keyrecord_t *record) {
             }
         }
     }
+#endif
 }
 
 #ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE

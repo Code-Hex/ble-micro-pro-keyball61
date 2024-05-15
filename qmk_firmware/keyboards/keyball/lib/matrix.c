@@ -1,5 +1,6 @@
 /*
 Copyright 2022 MURAOKA Taro (aka KoRoN, @kaoriya)
+Copyright 2024 Kei Kamikawa @codehex
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "bmp_matrix.h"
 #include "apidef.h"
 
-uint32_t get_device_row() { return BMPAPI->app.get_config()->matrix.rows; };
-uint32_t get_device_col() { return BMPAPI->app.get_config()->matrix.cols; };
+uint32_t get_device_row(void) { return BMPAPI->app.get_config()->matrix.rows; };
+uint32_t get_device_col(void) { return BMPAPI->app.get_config()->matrix.cols; };
 
 static inline void set_pin_input(uint8_t pin) {
     setPinInputHigh(pin);
@@ -120,4 +121,4 @@ void matrix_init_custom(void) {
 static const bmp_matrix_func_t matrix_func = {
     matrix_init_custom, get_device_row, get_device_col, duplex_scan};
 
-const bmp_matrix_func_t *get_matrix_func_user() { return &matrix_func; }
+const bmp_matrix_func_t *get_matrix_func_user(void) { return &matrix_func; }
