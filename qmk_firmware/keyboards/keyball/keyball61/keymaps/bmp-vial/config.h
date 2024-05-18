@@ -65,7 +65,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DIODE_DIRECTION     COL2ROW
 #define ENCODERS_PAD_A {}
 #define ENCODERS_PAD_B {}
-#define SERIAL_USE_MULTI_TRANSACTION
 
 #define TAP_CODE_DELAY 5
 

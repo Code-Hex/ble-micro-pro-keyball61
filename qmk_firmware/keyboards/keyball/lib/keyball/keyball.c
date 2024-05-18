@@ -635,7 +635,7 @@ bool is_mouse_record_kb(uint16_t keycode, keyrecord_t* record) {
 #ifdef USE_BMP_V0_FIRMWARE
 bool process_record_kb_bmp(uint16_t keycode, keyrecord_t *record)
 #else
-bool process_record_kb(uint16_t keycode, keyrecord_t *record)
+bool process_record_keyball(uint16_t keycode, keyrecord_t *record)
 #endif
 {
     // store last keycode, row, and col for OLED

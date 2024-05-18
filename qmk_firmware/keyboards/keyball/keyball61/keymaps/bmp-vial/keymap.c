@@ -15,6 +15,8 @@
  */
 #include QMK_KEYBOARD_H
 #include "lib/keyball/keyball.h"
+#include "bmp.h"
+#include "state_controller.h"
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -51,6 +53,29 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 // clang-format on
+
+void matrix_scan_kb() {
+  /*
+  * The bmp event loop is terminated by `bmp_schedule_next_task` if no key is operated for a certain period of time.
+  * This is probably sleep.
+  * To come back from sleep, `bmp_indicator_task` must return false.
+  * This can be done by using the BLE Micro Pro functionality, which returns false, so you can come back from sleep. (e.g. adv).
+  */
+
+  // By always setting `bmp_set_enable_task_interval_stretch` to false, this sleep mode entry
+  // can be prevented and keystrokes and trackball input will always be accepted.
+  bmp_set_enable_task_interval_stretch(false);
+  matrix_scan_user();
+}
+
+
+bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
+    bool cont = process_record_bmp(keycode, record);
+    if (cont) {
+        cont = process_record_keyball(keycode, record);
+    }
+    return cont;
+}
 
 #ifdef OLED_ENABLE
 

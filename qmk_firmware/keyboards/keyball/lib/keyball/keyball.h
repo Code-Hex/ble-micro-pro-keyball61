@@ -284,3 +284,7 @@ void keyball_set_cpi(uint8_t cpi);
 void pointing_device_driver_init(void);
 
 report_mouse_t pointing_device_driver_get_report(report_mouse_t rep);
+
+#ifndef USE_BMP_V0_FIRMWARE
+bool process_record_keyball(uint16_t keycode, keyrecord_t *record);
+#endif
