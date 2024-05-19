@@ -1,23 +1,23 @@
-name: 'Setup QMK firmware'
+name: 'Setup QMK Vial firmware'
 
 inputs:
   version:
-    default: 'bmp-0.11.3'
+    default: 'dev/ble-micro-pro'
     type: string
     required: false
   path:
-    default: '__qmk__'
+    default: '__qmk_vial__'
     type: string
     required: false
 
 runs:
   using: 'composite'
   steps:
-  - name: Checkout qmk_firmware
+  - name: Checkout vial-qmk
     uses: actions/checkout@v4
     with:
       path: ${{ inputs.path }}
-      repository: sekigon-gonnoc/qmk_firmware
+      repository: sekigon-gonnoc/vial-qmk
       submodules: recursive
       ref: ${{ inputs.version }}
 

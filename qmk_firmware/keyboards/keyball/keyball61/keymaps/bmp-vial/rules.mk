@@ -30,7 +30,7 @@ GREP ?= grep
 
 uf2: $(BUILD_DIR)/$(TARGET).bin
 	$(UF2CONV) -f nrf52 -b 0x26000 -o $(TARGET).uf2 $(BUILD_DIR)/$(TARGET).bin -c
-	$(UF2CONV) -f nrf52 -b 0x26000 $(BUILD_DIR)/$(TARGET).bin
+	-$(UF2CONV) -f nrf52 -b 0x26000 $(BUILD_DIR)/$(TARGET).bin
 
 nrfutil: zip # in platforms/bmp/platform.mk
 	if $(GREP) -q -s Microsoft /proc/version; then \
