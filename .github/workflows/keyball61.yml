@@ -33,9 +33,9 @@ jobs:
       working-directory: __qmk__
 
     - name: Archive firmwares
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: keyball61-firmwares
+        name: keyball61-firmwares-bmp
         path: |
           __qmk__/*.uf2
 
@@ -57,9 +57,9 @@ jobs:
       working-directory: __qmk_vial__
 
     - name: Archive firmwares
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: keyball61-firmwares
+        name: keyball61-firmwares-bmp-vial
         path: |
           __qmk_vial__/*.uf2
 
@@ -71,18 +71,20 @@ jobs:
 
     steps:
     - name: Download built firmwares
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
-        name: keyball61-firmwares
+        path: keyball61-firmwares
+        pattern: keyball61-firmwares-*
+        merge-multiple: true
     - name: List assets
-      run: ls -l *.uf2
+      run: ls -l keyball61-firmwares/*.uf2
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         draft: true
         prerelease: ${{ contains(github.ref_name, '-alpha.') || contains(github.ref_name, '-beta.') }}
         files: |
-          *.uf2
+          keyball61-firmwares/*.uf2
         fail_on_unmatched_files: true
         generate_release_notes: true
         append_body: true
