@@ -4,7 +4,7 @@
     "device_info": {
       "vid": "0x5957",
       "pid": "0x0100",
-      "name": "BLE Micro Pro Keyball61",
+      "name": "Keyball61",
       "manufacture": "codehex"
     },
     "matrix": {

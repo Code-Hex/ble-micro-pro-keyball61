@@ -4,9 +4,9 @@
     "pid": "0x0100"
   },
   "manufacturer": "codehex",
-  "keyboard_name": "BLE Micro Pro Keyball61",
+  "keyboard_name": "Keyball61",
   "layouts": {
-    "LAYOUT_right_ball": {
+    "LAYOUT_no_ball": {
       "layout": [
         { "label": "L00", "x": 0, "y": 0, "matrix": [0, 0] },
         { "label": "L01", "x": 1, "y": 0, "matrix": [0, 1] },
@@ -71,6 +71,9 @@
         { "label": "L46", "x": 6, "y": 4, "matrix": [4, 7] },
         { "label": "R46", "x": 7, "y": 4, "matrix": [9, 7] },
         { "label": "R45", "x": 8, "y": 4, "matrix": [9, 6] },
+        { "label": "R44", "x": 9, "y": 3, "matrix": [9, 5] },
+        { "label": "R43", "x":10, "y": 3, "matrix": [9, 4] },
+        { "label": "R42", "x":11, "y": 3, "matrix": [9, 2] },
         { "label": "R41", "x":12, "y": 4, "matrix": [9, 1] },
         { "label": "R40", "x":13, "y": 4, "matrix": [9, 0] }
       ]

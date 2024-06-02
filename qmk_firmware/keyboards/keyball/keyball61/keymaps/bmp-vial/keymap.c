@@ -18,6 +18,12 @@
 #include "bmp.h"
 #include "state_controller.h"
 
+// Disable BMP dynamic matrix size
+#undef MATRIX_ROWS
+#define MATRIX_ROWS MATRIX_ROWS_DEFAULT
+#undef MATRIX_COLS
+#define MATRIX_COLS MATRIX_COLS_DEFAULT
+
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_universal(

@@ -13,7 +13,7 @@ CUSTOM_MATRIX = yes # for BLE Micro Pro
 SRC += lib/matrix.c
 
 MOUSE_SHARED_EP = no
-# EXTRAKEY_ENABLE = yes       # Audio control and System control
+TAP_DANCE_ENABLE = yes
 CONSOLE_ENABLE = yes          # Console for debug
 
 # Required
