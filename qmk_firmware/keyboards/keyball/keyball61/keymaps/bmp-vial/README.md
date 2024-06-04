@@ -67,6 +67,12 @@ If the command is successfully executed, the following text is displayed `.` wil
 
 Use [Remap](https://remap-keys.app/) or [Vial](https://vial.rocks/) to edit keymap.
 
+## Config files
+
+You can use config files in `layouts/vial` directory.
+
+After editing config.json, please paste [info.json](https://github.com/Code-Hex/ble-micro-pro-keyball61/blob/main/qmk_firmware/keyboards/keyball/info.json) and [vial.json](https://github.com/Code-Hex/ble-micro-pro-keyball61/blob/main/qmk_firmware/keyboards/keyball/keyball61/keymaps/bmp-vial/vial.json) together into [bmp-vial-config-generator](https://sekigon-gonnoc.github.io/bmp-vial-config-generator/) and download the config.bin file. For more information, please read [this document](https://sekigon-gonnoc.github.io/BLE-Micro-Pro/#/about_config_files). 
+
 ## Special keycodes
 
 Keycode    |Description
