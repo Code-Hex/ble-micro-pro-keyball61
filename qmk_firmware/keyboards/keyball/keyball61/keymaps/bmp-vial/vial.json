@@ -1,0 +1,266 @@
+{
+  "name": "Keyball61",
+  "vendorId": "0x5957",
+  "productId": "0x0100",
+  "matrix": {
+      "rows": 10,
+      "cols": 8
+  },
+  "layouts": {
+    "labels": [
+      ["Ball availability", "None", "Right", "Left", "Dual"]
+    ],
+    "keymap": [
+      [{"x":3},                                             "0,4",    {"x": 8.5},   "5,4"                       ],
+      [{"y":-0.875,"x":4},                                  "0,5",    {"x": 6.5},   "5,5"                       ],
+      [{"y":-0.875,"x":2},            "0,2",{"x":2},        "0,6",    {"x": 4.5},   "5,6",{"x":2},        "5,2" ],
+      [{"y":-0.65,"c":"#aaaaaa"},     "0,0",{"c":"#cccccc"},"0,1",    {"x":12.5},   "5,1",{"c":"#aaaaaa"},"5,0" ],
+
+      [{"y":-0.6,"x":3,"c":"#cccccc"},                      "1,4",    {"x": 8.5},   "6,4"                       ],
+      [{"y":-0.875,"x":4},                                  "1,5",    {"x": 6.5},   "6,5"                       ],
+      [{"y":-0.875,"x":2},            "1,2",{"x": 2.0},     "1,6",    {"x": 4.5},   "6,6",{"x":2},        "6,2" ],
+      [{"y":-0.65,"c":"#aaaaaa"},     "1,0",{"c":"#cccccc"},"1,1",    {"x":12.5},   "6,1",{"c":"#aaaaaa"},"6,0" ],
+
+      [{"y":-0.6,"x":3,"c":"#cccccc"},                      "2,4",    {"x": 8.5},   "7,4"                       ],
+      [{"y":-0.875,"x":4},                                  "2,5",    {"x": 6.5},   "7,5"                       ],
+      [{"y":-0.875,"x":2},            "2,2",{"x":2},        "2,6",    {"x": 4.5},   "7,6",{"x":2},        "7,2" ],
+      [{"y":-0.65,"c":"#aaaaaa"},     "2,0",{"c":"#cccccc"},"2,1",    {"x":12.5},   "7,1",{"c":"#aaaaaa"},"7,0" ],
+
+      [{"y":-0.6,"x":3,"c":"#cccccc"},                      "3,4",    {"x": 8.5},   "8,4"                       ],
+      [{"y":-0.875,"x":4},                                  "3,5",    {"x": 6.5},   "8,5"                       ],
+      [{"y":-0.875,"x":2},            "3,2",{"x":2},        "3,6",    {"x": 4.5},   "8,6",{"x":2},        "8,2" ],
+      [{"y":-0.85,"x":6,"c":"#aaaaaa"},                     "3,7",    {"x": 2.5},   "8,7"                       ],
+      [{"y":-0.8},                    "3,0",{"c":"#cccccc"},"3,1",    {"x":12.5},   "8,1",{"c":"#aaaaaa"},"8,0" ],
+
+      [{"y":-0.6,"x":3},    "4,4\n\n\n0,0",              {"x": 8.5}, "9,4\n\n\n0,0" ],
+      [{"y":-1.00,"x":3},   "4,4\n\n\n0,1", "\n\n\n0,2", {"x": 8.5}, "9,4\n\n\n0,2" ],
+      [{"y":-0.75,"x":2},   "4,2\n\n\n0,0",              {"x":10.5}, "9,2\n\n\n0,0" ],
+      [{"y":-1.00,"x":2},   "4,2\n\n\n0,1", "\n\n\n0,2", {"x":10.5}, "9,2\n\n\n0,2" ],
+      [{"y":-0.75,"x":4.3}, "4,5\n\n\n0,0",              {"x": 5.9}, "9,5\n\n\n0,0" ],
+      [{"y":-1.00,"x":4.3}, "4,5\n\n\n0,1", "\n\n\n0,2", {"x": 5.9}, "9,5\n\n\n0,2" ],
+      [{"y":-0.9},          "4,0","4,1",    {"x":12.5},   "9,1","9,0" ],
+
+      [{"r": 10, "rx": 5.35, "ry":5.5, "y":-1.00           }, "4,6"                   ],
+      [{"r": 20, "rx": 6.40, "ry":5.7, "y":-0.99, "x":-0.03},       "4,7"             ],
+      [{"r":-20, "rx":10.15,           "y":-1.00, "x":-1.02},             "9,7"       ],
+      [{"r":-10, "rx":11.15, "ry":5.5, "y":-0.98, "x":-1.00},                   "9,6" ]
+    ]
+  },
+  "customKeycodes": [
+    {
+      "name": "SEL_BLE",
+      "title": "Output report from BLE",
+      "shortName": "SEL\nBLE"
+    },
+    {
+      "name": "SEL_USB",
+      "title": "Output report from USB",
+      "shortName": "SEL\nUSB"
+    },
+    {
+      "name": "ADV0",
+      "title": "Start advertise to ID0",
+      "shortName": "ADV\nID0"
+    },
+    {
+      "name": "ADV1",
+      "title": "Start advertise to ID1",
+      "shortName": "ADV\nID1"
+    },
+    {
+      "name": "ADV2",
+      "title": "Start advertise to ID2",
+      "shortName": "ADV\nID2"
+    },
+    {
+      "name": "ADV3",
+      "title": "Start advertise to ID3",
+      "shortName": "ADV\nID3"
+    },
+    {
+      "name": "ADV4",
+      "title": "Start advertise to ID4",
+      "shortName": "ADV\nID4"
+    },
+    {
+      "name": "ADV5",
+      "title": "Start advertise to ID5",
+      "shortName": "ADV\nID5"
+    },
+    {
+      "name": "ADV6",
+      "title": "Start advertise to ID6",
+      "shortName": "ADV\nID6"
+    },
+    {
+      "name": "ADV7",
+      "title": "Start advertise to ID7",
+      "shortName": "ADV\nID7"
+    },
+    {
+      "name": "AD_WO_L",
+      "title": "Start advertise without whitelist (Pair new device)",
+      "shortName": "ADV\nW/O L"
+    },
+    {
+      "name": "DEL0",
+      "title": "Delete pairing info ID0",
+      "shortName": "DEL\nID0"
+    },
+    {
+      "name": "DEL1",
+      "title": "Delete pairing info ID1",
+      "shortName": "DEL\nID1"
+    },
+    {
+      "name": "DEL2",
+      "title": "Delete pairing info ID2",
+      "shortName": "DEL\nID2"
+    },
+    {
+      "name": "DEL3",
+      "title": "Delete pairing info ID3",
+      "shortName": "DEL\nID3"
+    },
+    {
+      "name": "DEL4",
+      "title": "Delete pairing info ID4",
+      "shortName": "DEL\nID4"
+    },
+    {
+      "name": "DEL5",
+      "title": "Delete pairing info ID5",
+      "shortName": "DEL\nID5"
+    },
+    {
+      "name": "DEL6",
+      "title": "Delete pairing info ID6",
+      "shortName": "DEL\nID6"
+    },
+    {
+      "name": "DEL7",
+      "title": "Delete pairing info ID7",
+      "shortName": "DEL\nID7"
+    },
+    {
+      "name": "DEL_ALL",
+      "title": "Delete all pairing info",
+      "shortName": "DEL\nALL"
+    },
+    {
+      "name": "BATT",
+      "title": "Print battery info",
+      "shortName": "BATT\nLV"
+    },
+    {
+      "name": "ENT_SLP",
+      "title": "Enter deep sleep mode",
+      "shortName": "ENT\nSLP"
+    },
+    {
+      "name": "DISABLE_KEY_OS_OVERRIDE",
+      "title": "Disable key overrides for JP/US OS",
+      "shortName": "D\nOVR"
+    },
+    {
+      "name": "ENABLE_US_KEY_ON_JP_OS_OVERRIDE",
+      "title": "Enable US keyboard on JP OS override",
+      "shortName": "UJ\nOVR"
+    },
+    {
+      "name": "ENABLE_JP_KEY_ON_US_OS_OVERRIDE",
+      "title": "Enable JP keyboard on US OS override",
+      "shortName": "JU\nOVR"
+    },
+    {
+      "name": "KBC_RST",
+      "title": "Reset Keyball configuration",
+      "shortName": "KBC\nRST"
+    },
+    {
+      "name": "KBC_SAVE",
+      "title": "Persist Keyball configuration to EEPROM",
+      "shortName": "KBC\nSAVE"
+    },
+    {
+      "name": "CPI_I100",
+      "title": "Increase 100 CPI (max 12000)",
+      "shortName": "CPI\nI100"
+    },
+    {
+      "name": "CPI_D100",
+      "title": "Decrease 100 CPI (min 100)",
+      "shortName": "CPI\nD100"
+    },
+    {
+      "name": "CPI_I1K",
+      "title": "Increase 1000 CPI (max 12000)",
+      "shortName": "CPI\nI1K"
+    },
+    {
+      "name": "CPI_D1K",
+      "title": "Decrease 1000 CPI (min 100)",
+      "shortName": "CPI\nD1K"
+    },
+    {
+      "name": "SCRL_TO",
+      "title": "Toggle scroll mode",
+      "shortName": "SCRL\nTO"
+    },
+    {
+      "name": "SCRL_MO",
+      "title": "Enable scroll mode when pressing",
+      "shortName": "SCRL\nMO"
+    },
+    {
+      "name": "SCRL_DVI",
+      "title": "Increase scroll divider (max D7 = 1/128) <- Most Scroll slow",
+      "shortName": "SCRL\nDVI"
+    },
+    {
+      "name": "SCRL_DVD",
+      "title": "Decrease scroll divider (min 0 = 1/1) <- Most Scroll fast",
+      "shortName": "SCRL\nDVD"
+    },
+    {
+      "name": "AML_TO",
+      "title": "Toggle automatic mouse layer",
+      "shortName": "AML\nTO"
+    },
+    {
+      "name": "AML_I50",
+      "title": "Increase 50ms automatic mouse layer timeout(max 15=950ms)",
+      "shortName": "AML\nI50"
+    },
+    {
+      "name": "AML_D50",
+      "title": "Decrease 50ms automatic mouse layer timeout(min 1=250ms)",
+      "shortName": "AML\nD50"
+    },
+    {
+      "name": "SSNP_VRT",
+      "title": "Set scroll snap mode as vertical",
+      "shortName": "SSNP\nVRT"
+    },
+    {
+      "name": "SSNP_HOR",
+      "title": "Set scroll snap mode as horizontal",
+      "shortName": "SSNP\nHOR"
+    },
+    {
+      "name": "SSNP_FRE",
+      "title": "Set scroll snap mode as disable (free scroll)",
+      "shortName": "SSNP\nFRE"
+    },
+    {
+      "name": "LOWER",
+      "title": "Switch to the LOWER layer when key is pressing",
+      "shortName": "LOWER"
+    },
+    {
+      "name": "RAISE",
+      "title": "Switch to the RAISE layer when key is pressing",
+      "shortName": "RAISE"
+    }
+  ]
+}

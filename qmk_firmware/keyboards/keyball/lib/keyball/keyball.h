@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #  ifdef POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #  include "lib/quantum/pointing_device/pointing_device_auto_mouse.h"
 #  endif
+#else
+#include "bmp_custom_keycodes.h"
 #endif
 
 /*
@@ -282,3 +284,7 @@ void keyball_set_cpi(uint8_t cpi);
 void pointing_device_driver_init(void);
 
 report_mouse_t pointing_device_driver_get_report(report_mouse_t rep);
+
+#ifndef USE_BMP_V0_FIRMWARE
+bool process_record_keyball(uint16_t keycode, keyrecord_t *record);
+#endif

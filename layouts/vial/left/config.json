@@ -1,0 +1,60 @@
+{
+  "config": {
+    "version": 2,
+    "device_info": {
+      "vid": "0x5957",
+      "pid": "0x0100",
+      "name": "Keyball61",
+      "manufacture": "codehex"
+    },
+    "matrix": {
+      "rows": 10,
+      "cols": 8,
+      "layer": 4,
+      "device_rows": 5,
+      "device_cols": 4,
+      "debounce": 1,
+      "is_left_hand": 1,
+      "diode_direction": 0,
+      "row_pins": [
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "col_pins": [
+        20,
+        19,
+        18,
+        17
+      ]
+    },
+    "mode": "SPLIT_SLAVE",
+    "startup": 1,
+    "peripheral": {
+      "max_interval": 60,
+      "min_interval": 30,
+      "slave_latency": 7
+    },
+    "central": {
+      "max_interval": 60,
+      "min_interval": 30,
+      "slave_latency": 0
+    },
+    "led": {
+      "pin": 1,
+      "num": 74
+    },
+    "reserved": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}
