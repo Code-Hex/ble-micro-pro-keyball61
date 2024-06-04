@@ -19,7 +19,7 @@ $ git clone https://github.com/Code-Hex/ble-micro-pro-keyball61.git keyball
 $ git clone --depth 1 -b bmp-vial-1.2.0 https://github.com/sekigon-gonnoc/vial-qmk.git qmk_firmware_bmp_vial
 ```
 
-Currently BLE Micro Pro Keyball firmwares are verified to compile with [794d0a2](https://github.com/sekigon-gonnoc/vial-qmk/commit/794d0a21184f4cde46709483950aa35aad5b075f) and [BLE Micro Pro Web Configurator](https://sekigon-gonnoc.github.io/BLE-Micro-Pro-WebConfigurator/).
+Currently BLE Micro Pro Keyball firmwares are verified to compile with bmp-vial-1.2.0 and [BLE Micro Pro Web Configurator](https://sekigon-gonnoc.github.io/BLE-Micro-Pro-WebConfigurator/).
 
 3. Create a symbolic link to this `keyball/` directory from [sekigon-gonnoc/vial-qmk](https://github.com/sekigon-gonnoc/vial-qmk)'s `keyboards/` directory.
 
