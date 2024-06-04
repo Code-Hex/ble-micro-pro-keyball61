@@ -2,7 +2,7 @@ name: 'Setup QMK Vial firmware'
 
 inputs:
   version:
-    default: 'dev/ble-micro-pro'
+    default: 'bmp-vial-1.2.0'
     type: string
     required: false
   path:
