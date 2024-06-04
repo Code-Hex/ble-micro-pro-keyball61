@@ -251,6 +251,16 @@
       "name": "SSNP_FRE",
       "title": "Set scroll snap mode as disable (free scroll)",
       "shortName": "SSNP\nFRE"
+    },
+    {
+      "name": "LOWER",
+      "title": "Switch to the LOWER layer when key is pressing",
+      "shortName": "LOWER"
+    },
+    {
+      "name": "RAISE",
+      "title": "Switch to the RAISE layer when key is pressing",
+      "shortName": "RAISE"
     }
   ]
 }

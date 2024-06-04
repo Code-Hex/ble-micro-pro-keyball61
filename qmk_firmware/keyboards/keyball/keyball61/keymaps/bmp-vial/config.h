@@ -57,7 +57,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* key matrix size */
 #define MATRIX_ROWS_DEFAULT 10
 #define MATRIX_COLS_DEFAULT 8
-#define MATRIX_SCAN_TIME_MS 20
 
 #define BMP_DEFAULT_MODE SINGLE
 #define THIS_DEVICE_ROWS MATRIX_ROWS_DEFAULT
@@ -74,8 +73,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define ACTION_DEBUG
 #define ENCODERS_PAD_A {}
 #define ENCODERS_PAD_B {}
-
-#define TAP_CODE_DELAY 5
 
 #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
 #define AUTO_MOUSE_DEFAULT_LAYER 2

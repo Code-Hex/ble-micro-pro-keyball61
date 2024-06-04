@@ -13,7 +13,6 @@ CUSTOM_MATRIX = yes # for BLE Micro Pro
 SRC += lib/matrix.c
 
 MOUSE_SHARED_EP = no
-TAP_DANCE_ENABLE = yes
 CONSOLE_ENABLE = yes          # Console for debug
 
 # Required
@@ -21,6 +20,10 @@ OLED_ENABLE = yes
 RGBLIGHT_ENABLE = yes
 SPLIT_KEYBOARD = yes
 SPLIT_TRANSPORT = custom
+
+# Vial
+QMK_SETTINGS = yes
+TAP_DANCE_ENABLE = yes
 
 VIA_ENABLE = yes
 VIAL_ENABLE = yes
